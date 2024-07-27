@@ -1,0 +1,119 @@
+4. gdp_df.shape
+(7662, 4)
+
+5. gdp_df.info()
+
+6. 
+# 6 Drop the 'Value Footnotes' column
+gdp_df = gdp_df.drop(columns=['Value Footnotes'])
+gdp_df.columns = ['Country', 'Year', 'GDP_Per_Capita']
+print(gdp_df)
+
+7.
+# Determine the number of unique years in the data
+unique_years = gdp_df['Year'].nunique()
+country_years_count = gdp_df.groupby('Country').size()
+countries_missing_years = country_years_count[country_years_count < unique_years]
+observations_per_year = gdp_df['Year'].value_counts().sort_index()
+print("Countries missing many years of data:")
+print(countries_missing_years)
+
+print("\nNumber of observations per year:")
+print(observations_per_year)
+
+# Observations
+for year, count in observations_per_year.items():
+    print(f"Year {year}: {count} observations")
+
+8. gdp_2020 = gdp_df[gdp_df['Year'] == 2020]['GDP_Per_Capita']
+
+# histogram
+import matplotlib.pyplot as plt
+
+plt.figure(figsize=(10, 6))
+plt.hist(gdp_2020, bins=5, edgecolor='black')
+plt.title('Histogram of GDP Per Capita for 2020')
+plt.xlabel('GDP Per Capita')
+plt.ylabel('Frequency')
+plt.show()
+
+# density plot
+import seaborn as sns
+
+plt.figure(figsize=(10, 6))
+sns.kdeplot(gdp_2020, shade=True)
+plt.title('Density Plot of GDP Per Capita for 2020')
+plt.xlabel('GDP Per Capita')
+plt.ylabel('Density')
+plt.show()
+
+#box plot
+plt.figure(figsize=(10, 6))
+sns.boxplot(y=gdp_2020)
+plt.title('Boxplot of GDP Per Capita for 2020')
+plt.ylabel('GDP Per Capita')
+plt.show()
+
+#violin plot
+plt.figure(figsize=(10, 6))
+sns.violinplot(y=gdp_2020)
+plt.title('Violin Plot of GDP Per Capita for 2020')
+plt.ylabel('GDP Per Capita')
+plt.show()
+
+9.
+gdp_2020 = gdp_df[gdp_df['Year'] == 2020]['GDP_Per_Capita']
+
+median_gdp_2020 = gdp_2020.median()
+
+print(f"The median GDP per capita in 2020 is: {median_gdp_2020}")
+
+10. 
+import seaborn as sns
+import matplotlib.pyplot as plt
+
+plt.figure(figsize=(10, 6))
+sns.boxplot(x='Year', y='GDP_Per_Capita', data=gdp_decades)
+plt.title('Boxplot of GDP Per Capita for Selected Years')
+plt.xlabel('Year')
+plt.ylabel('GDP Per Capita')
+plt.show()
+
+plt.figure(figsize=(10, 6))
+sns.scatterplot(x='Year', y='GDP_Per_Capita', data=gdp_decades, hue='Country', style='Country')
+plt.title('Scatterplot of GDP Per Capita for Selected Years')
+plt.xlabel('Year')
+plt.ylabel('GDP Per Capita')
+plt.legend(title='Country')
+plt.show()
+
+
+plt.figure(figsize=(10, 6))
+sns.regplot(x='Year', y='GDP_Per_Capita', data=gdp_decades, scatter=True, fit_reg=True, ci=None)
+plt.title('Scatterplot with Trend Line of GDP Per Capita for Selected Years')
+plt.xlabel('Year')
+plt.ylabel('GDP Per Capita')
+plt.show()
+
+
+11.
+high_gdp_df = gdp_df[gdp_df['GDP_Per_Capita'] > 100000]
+high_gdp_df = high_gdp_df.sort_values(by='Year')
+first_country = high_gdp_df.iloc[0]
+print(f"The first country to have a GDP per capita greater than $100,000 is {first_country['Country']} in the year {first_country['Year']}.")
+
+12.
+gdp_2020 = gdp_df[gdp_df['Year'] == 2020]
+highest_gdp_2020 = gdp_2020.loc[gdp_2020['GDP_Per_Capita'].idxmax()]
+print(f"The country with the highest GDP per capita in 2020 is {highest_gdp_2020['Country']} with a GDP per capita of {highest_gdp_2020['GDP_Per_Capita']}.")
+country_highest_gdp = highest_gdp_2020['Country']
+gdp_country_df = gdp_df[gdp_df['Country'] == country_highest_gdp]
+plt.figure(figsize=(10, 6))
+sns.lineplot(data=gdp_country_df, x='Year', y='GDP_Per_Capita', marker='o')
+plt.title(f'GDP Per Capita Over Time for {country_highest_gdp}')
+plt.xlabel('Year')
+plt.ylabel('GDP Per Capita')
+plt.grid(True)
+plt.show()
+
+13.
